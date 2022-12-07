@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  from: 1.5
+  to: 1.5
+  m: 1.5
+  k: 1.5
+  n_s: 1
+  n_g: 1
+
+two:
+  from: 1.5
+  to: 1.5
+  m: 1.5
+  k: 1.5
+  n_s: 1
+  n_g: 1

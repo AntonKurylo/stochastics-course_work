@@ -1,0 +1,265 @@
+<div class="container text-center">
+  <div class="row">
+    <div class="col">
+      <table class="table table-bordered border-dark" id="table" style="font-size: 21px">
+        <thead>
+        <tr>
+          <th scope="col" colspan="2">
+            <span style="color: black; font-size: 27px;">Характеристика розподілу фон Мізеса</span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row">Підтримка</th>
+          <td>
+            <p>Будь-який інтервал довжиною 2π</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Параметри</th>
+          <td>
+            <%= image_tag 'characteristics/001.png', width: 340, height: 140, style: "vertical-align:middle; -aw-left-pos:0pt; -aw-rel-hpos:column; -aw-rel-vpos:paragraph; -aw-top-pos:0pt; -aw-wrap-type:inline" %>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Функція щільності ймовірності (PDF)</th>
+          <td>
+            <%= image_tag 'characteristics/002.png', width: 160, height: 55, style: "vertical-align:middle; -aw-left-pos:0pt; -aw-rel-hpos:column; -aw-rel-vpos:paragraph; -aw-top-pos:0pt; -aw-wrap-type:inline" %>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Кумулятивна функція розподілу (CDF)</th>
+          <td>
+            <%= image_tag 'characteristics/003.png', width: 210, height: 60, style: "vertical-align:middle; -aw-left-pos:0pt; -aw-rel-hpos:column; -aw-rel-vpos:paragraph; -aw-top-pos:0pt; -aw-wrap-type:inline" %>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Математичне очікування (Mean)</th>
+          <td>
+            <p>μ</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Медіана (Median)</th>
+          <td>
+            <p>μ</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Мода (Mode)</th>
+          <td>
+            <p>μ</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Дисперсія (Variance)</th>
+          <td>
+            <%= image_tag 'characteristics/004.png', width: 230, height: 50, style: "vertical-align:middle; -aw-left-pos:0pt; -aw-rel-hpos:column; -aw-rel-vpos:paragraph; -aw-top-pos:0pt; -aw-wrap-type:inline" %>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <div class="alert alert-primary" style="text-align: left; display: block; padding: 26px">
+        <%= form_for :parameter, url: parameters_path do |form| %>
+          <div class="row g-3 align-items-center">
+            <h4>Введіть початок розподілу:</h4>
+            <div class="col-auto">
+              <label for="inputFromRange" class="col-form-label" style="color: #2E2F30; font-size: 20px">Від
+                (a):</label>
+            </div>
+            <div class="col-auto">
+              <%= form.number_field :from, step: 0.01, :class => "form-control", :id => "inputFromRange", :aria_describedby => "fromRangeHelpInline", required: true %>
+            </div>
+            <div class="col-auto">
+              <span id="fromRangeHelpInline" class="form-text">
+                Будь-яке значення.
+              </span>
+            </div>
+            <p style="margin: 0;text-indent:0;"></p>
+            <div class="col-auto">
+              <label for="inputFromRange" class="col-form-label" style="color: #2E2F30; font-size: 20px">До (b):</label>
+            </div>
+            <div class="col-auto">
+              <%= form.text_field :to, :class => "form-control", :id => "inputToRange", :aria_describedby => "toRangeHelpInline", readonly: true %>
+            </div>
+            <div class="col-auto">
+              <span id="toRangeHelpInline" class="form-text">
+                Автоматично: 'from' + 2π.
+              </span>
+            </div>
+            <h4>Введіть міру розташування:</h4>
+            <div class="col-auto">
+              <label for="inputLocationMeasure" class="col-form-label" style="color: #2E2F30; font-size: 20px">μ:</label>
+            </div>
+            <div class="col-auto">
+              <%= form.number_field :m, step: 0.01, min: 0, max: 0, :class => "form-control", :id => "inputLocationMeasure", :aria_describedby => "locationMeasureHelpInline", required: true %>
+            </div>
+            <div class="col-auto">
+              <span id="locationMeasureHelpInline" class="form-text">
+               Має бути між 'from' і 'to'.
+              </span>
+            </div>
+            <h4>Введіть міру концентрації:</h4>
+            <div class="col-auto">
+              <label for="inputConcentrationMeasure" class="col-form-label" style="color: #2E2F30; font-size: 20px">k:</label>
+            </div>
+            <div class="col-auto">
+              <%= form.number_field :k, min: 0.01, step: 0.01, :class => "form-control", :id => "inputConcentrationMeasure", :aria_describedby => "concentrationMeasureHelpInline", required: true %>
+            </div>
+            <div class="col-auto">
+              <span id="concentrationMeasureHelpInline" class="form-text">
+                Має бути більше 0.
+              </span>
+            </div>
+            <h4>Введіть розмір вибірки:</h4>
+            <div class="col-auto">
+              <label for="inputStatistics" class="col-form-label" style="color: #2E2F30; font-size: 20px">N_s:</label>
+            </div>
+            <div class="col-auto">
+              <%= form.number_field :n_s, in: 1..100000, step: 1, :class => "form-control", :id => "inputStatistics", :aria_describedby => "statisticsMeasureHelpInline", required: true %>
+            </div>
+            <div class="col-auto">
+              <span id="statisticsMeasureHelpInline" class="form-text">
+                Має бути між 1 і 100 000.
+              </span>
+            </div>
+            <h4>Введіть кількість інтервалів:</h4>
+            <div class="col-auto">
+              <label for="inputIntervals" class="col-form-label" style="color: #2E2F30; font-size: 20px">N_g:</label>
+            </div>
+            <div class="col-auto">
+              <%= form.number_field :n_g, in: 1..1000, step: 1, :class => "form-control", :id => "inputIntervals", :aria_describedby => "intervalsMeasureHelpInline", required: true %>
+            </div>
+            <div class="col-auto">
+              <span id="intervalsMeasureHelpInline" class="form-text">
+                Має бути між 1 і 1000.
+              </span>
+            </div>
+            <div>
+              <%= form.submit "Моделювати", :class => "btn btn-primary" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <hr>
+  <div style="color: black; font-family: 'Times New Roman',serif; font-size: 25px">
+
+    <nav id="navbar-example3" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
+      <h3>Розподіл фон Мізеса</h3>
+      <div id="list-example" class="list-group">
+        <a class="list-group-item list-group-item-action" href="#list-item-1">
+          Визначення розподілу
+        </a>
+        <a class="list-group-item list-group-item-action" href="#list-item-2">
+          Застосування розподілу
+        </a>
+        <a class="list-group-item list-group-item-action" href="#list-item-3">
+          Приклади застосування розподілу
+        </a>
+      </div>
+      <div style="color: black; font-family: 'Times New Roman',serif; font-size: 21px">
+        <p id="list-item-1">
+          <span style="color: black; font-family: 'Times New Roman',serif; font-size: 40px">Визначення розподілу </span>
+        </p>
+        <p style="text-indent: 40px; text-align: justify; line-height: 1.5">
+          Розподіл фон Мізеса належить до абсолютно неперервних
+          розподілів, які підтримуються на інтервалах довжиною 2π – спрямовані (кругові) розподіли.
+          У теорії ймовірностей і спрямованій статистиці розподіл фон Мізеса (також відомий як круговий нормальний
+          розподіл) є безперервним розподілом ймовірностей на колі.
+        </p>
+        <p style="text-indent: 40px; text-align: justify; line-height: 1.5">
+          Функція щільності ймовірності (Probability Density Function – PDF) – це функція, значення якої в будь-якій
+          заданій вибірці (або точці) у просторі вибірки (набір можливих значень, прийнятих випадковою змінною)
+          може визначати як забезпечення відносної ймовірності того, що значення випадкової змінної буде близьким до
+          цієї вибірки.
+          Функція щільності ймовірності (PDF) розподілу фон Мізеса визначається як:
+          <%= image_tag 'characteristics/002.png', width: 170, height: 60, style: "vertical-align:middle; -aw-left-pos:0pt; -aw-rel-hpos:column; -aw-rel-vpos:paragraph; -aw-top-pos:0pt; -aw-wrap-type:inline" %>
+          <br>
+          <span style="text-indent: 40px; display:inline-block;">де x – випадкова кутова змінна, x ∈ [-π;π]</span>;<br>
+          <span style="text-indent: 40px; display:inline-block;">μ – міра розташування (середній напрямок), μ ∈ [-π;π];</span><br>
+          <span style="text-indent: 40px; display:inline-block;">κ – міра концентрації функції щільності ймовірності, κ > 0;</span><br>
+          <span style="text-indent: 40px; display:inline-block;">Ι_0 (κ) – модифікована функція Бесселя першого роду порядку 0.</span><br>
+          <span style="text-indent: 40px; display:inline-block;">Діапазон x і μ може бути будь-яким інтервалом довжини 2π.
+            Чим більша концентрація, тим більша концентрація навколо міри розташування (в середньому напрямку).</span>
+        </p>
+        <p style="text-indent: 40px; text-align: justify; line-height: 1.5">
+          Приклад графіку функції щільності ймовірності розподілу фон Мізеса.
+          <%= image_tag 'characteristics/pdf.png', width: 500, height: 350, style: "vertical-align:middle; -aw-left-pos:0pt; -aw-rel-hpos:column; -aw-rel-vpos:paragraph; -aw-top-pos:0pt; -aw-wrap-type:inline" %>
+        </p>
+        <p style="text-indent: 40px; text-align: justify; line-height: 1.5">
+          Параметри μ та κ:<br>
+          <span style="text-indent: 40px; display:inline-block;">● μ – міра розташування (розподіл групується навколо μ);</span><br>
+          <span style="text-indent: 40px; display:inline-block;">● κ – міра концентрації:</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Якщо κ дорівнює нулю, розподіл рівномірний, а для малих κ,
+             він близький до рівномірного;</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Якщо κ великий, розподіл стає дуже концентрованим навколо μ.
+            У міру збільшення κ, розподіл наближається до нормального розподілу по x із середнім μ і дисперсією 1/κ.
+          </span>
+        </p>
+        <p id="list-item-2">
+          <span style="color: black; font-family: 'Times New Roman',serif; font-size: 40px">Застосування розподілу</span>
+        </p>
+        <p style="text-indent: 40px; text-align: justify; line-height: 1.5">
+          Спрямовану (кругову) статистику слід використовувати щоразу, коли є векторний набір даних.
+          Векторний набір даних містить: кути, періодичність, немає справжнього нуля.
+        </p>
+        <p style="text-indent: 40px; text-align: justify; line-height: 1.5">
+          Кутові випадкові величини природніше моделюються за допомогою спрямованих (кругових) розподілів, а не майже
+          повсюдного використання нормальних розподілів.
+          Вони є більш природними з кількох причин, деякі з яких ми зараз коротко наведемо:<br>
+          <span style="text-indent: 40px; display:inline-block;">● Розподіл фон Мізеса визначено на правильному просторі вибірки, тоді як нормальний розподіл не
+            обмежений інтервалом довжини 2π, наприклад, [-π;π) або [0;2π). Нормальний розподіл може бути хорошим наближенням далеко від кордонів.
+            Однак його використання може призвести до проблем поблизу кордонів.</span><br>
+          <span style="text-indent: 40px; display:inline-block;">● Розподіл фон Мізеса має правильну граничну поведінку при κ→0, тоді як нормальний розподіл ні.
+            Розподіл фон Мізеса наближається до рівномірного розподілу на одиничному колі в цій межі, так що всі напрямки є однаково ймовірними.</span><br>
+          <span style="text-indent: 40px; display:inline-block;">● Наївне використання нормальних розподілів для кругових задач може призвести до неправильного злиття
+            апріору з ймовірністю вимірювання. Тому, наприклад, якщо ви виконували вимірювання кута прибуття в програмі відстеження,
+            ви могли неправильно об’єднати вимірювання під час виконання байєсівського оновлення.</span>
+        </p>
+        <p id="list-item-3">
+          <span style="color: black; font-family: 'Times New Roman',serif; font-size: 40px">Приклади застосування розподілу</span>
+        </p>
+        <p style="text-indent: 40px; text-align: justify; line-height: 1.5">
+          Розподіл фон Мізеса належить до розподілів спрямованої (кругової) статистики.
+          Спрямована статистика має багато застосувань у науці та техніці. Кілька таких прикладів:<br>
+          <span style="text-indent: 40px; display:inline-block;">● Науки про землю:</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Землетруси;</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Обертання тектонічних плит.</span><br>
+          <span style="text-indent: 40px; display:inline-block;">● Метеорологія:</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Напрямки вітру;</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Час доби, коли відбуваються певні погодні явища, наприклад, сильний дощ і гроза.</span><br>
+          <span style="text-indent: 40px; display:inline-block;">● Біологія:</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Навігація тварин;</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Циркадні ритми.</span><br>
+          <span style="text-indent: 40px; display:inline-block;">● Фізика:</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Дробові частини вагомих ваг;</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Напрямки оптичних осей кристалів;</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Поширення на небесній сфері космічних променів високих енергій.</span><br>
+          <span style="text-indent: 40px; display:inline-block;">● Інженерія:</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Відстеження, наприклад, вимірювання кута прибуття.</span><br>
+          <span style="text-indent: 40px; display:inline-block;">● Інші області:</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Аналіз зображення;</span><br>
+          <span style="text-indent: 55px; display:inline-block;">○ Психологія і медицина.</span>
+        </p>
+      </div>
+    </nav>
+  </div>
+</div>
+<script>
+    document.getElementById("inputFromRange").addEventListener('change', function () {
+        let inputFromRange = document.getElementById("inputFromRange");
+        let inputLocationMeasure = document.getElementById("inputLocationMeasure")
+
+        document.getElementById("inputToRange").value = (+inputFromRange.value + 6.28).toFixed(2);
+        inputLocationMeasure.value = +inputFromRange.value;
+        inputLocationMeasure.min = +inputFromRange.value;
+        inputLocationMeasure.max = +(+inputFromRange.value + 6.28).toFixed(2);
+    });
+</script>

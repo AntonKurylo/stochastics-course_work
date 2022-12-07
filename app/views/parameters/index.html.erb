@@ -1,0 +1,74 @@
+<!--<p style="color: green"><%#= notice %></p>-->
+
+
+
+<!--<div id="parameters">-->
+<%# @parameters.each do |parameter| %>
+<%#= render parameter %>
+<!--    <p>-->
+<%#= link_to "Show this parameter", parameter %>
+<!--    </p>-->
+<%# end %>
+<!--</div>-->
+
+<%#= link_to "New parameter", new_parameter_path %>
+
+<h1 style="padding: 0 25px">Всі моделювання</h1>
+<div class="container text-center">
+  <div class="col">
+    <% @parameters.each do |parameter| %>
+      <h3 style="padding-top: 15px;">Моделювання # <%= parameter.id %></h3>
+      <table class="table table-bordered border-dark" id="table" style="font-size: 21px">
+        <thead>
+        <tr>
+          <th scope="col" colspan="2">
+            <span style="color: black; font-size: 27px;">Параметри моделювання</span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row">Початок інтервалу (a)</th>
+          <td>
+            <%= parameter.from %>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Кінець інтервалу (b)</th>
+          <td>
+            <%= parameter.to %>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Міра розташування (μ)</th>
+          <td>
+            <%= parameter.m %>
+        </tr>
+        <tr>
+          <th scope="row">Міра концентрації (k)</th>
+          <td>
+            <%= parameter.k %>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Розмір вибірки (N_s)</th>
+          <td>
+            <%= parameter.n_s %>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Кількість інтервалів (N_g)</th>
+          <td>
+            <%= parameter.n_g %>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-primary" style="text-align: center; display: block; margin: 0; padding: 13px 0 0 0;">
+        <p>
+          <%= link_to "Показати результати моделювання", parameter, { :class => "btn btn-primary" } %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>

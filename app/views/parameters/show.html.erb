@@ -1,0 +1,205 @@
+<!--<p style="color: green"><%#= notice %></p>-->
+
+<%#= render @parameter %>
+
+<!--
+<div>
+  <%#= link_to "Edit this parameter", edit_parameter_path(@parameter) %>
+<%#= link_to "Back to parameters", parameters_path %>
+
+<%#= button_to "Destroy this parameter", @parameter, method: :delete %>
+</div>
+-->
+
+<!--<p style="padding: 0 25px">-->
+<%#= link_to "Повернутися до всіх моделювань", parameters_path, { :class => "btn btn-outline-primary btn-sm" } %>
+<!--</p>-->
+
+<!--<p style="padding: 0 25px">
+  <%#= link_to "Видалити це моделювання", @parameter, method: :delete, class: "btn btn-outline-primary btn-sm" %>
+</p>-->
+
+<!--<p style="padding: 0 25px">
+  <%#= link_to "Редагувати вхідні дані моделювання", edit_parameter_path(@parameter), { :class => "btn btn-outline-primary btn-sm" } %>
+</p>-->
+
+<style>
+    ul.hr {
+        margin: 0;
+        padding: 10px;
+    }
+
+    ul.hr li {
+        display: inline;
+        margin-right: 5px;
+        padding: 17px;
+    }
+
+    table {
+        border: 1px solid #000;
+        width: 600px;
+        height: 300px;
+        box-sizing: border-box;
+        border-collapse: collapse;
+        margin: 0px auto;
+    }
+
+    tr {
+        border: 1px solid #000;
+        box-sizing: border-box;
+        height: 20%;
+    }
+
+    td {
+        border: 1px solid #000;
+        box-sizing: border-box;
+        height: 20%;
+    }
+</style>
+
+<p>
+  <%= form_for :result_to_xlsx, url: save_to_xlsx_path do |form| %>
+    <%= form.number_field :id, :value => @parameter.id, hidden: true %>
+    <%= form.number_field :a, :value => @parameter.from, hidden: true %>
+    <%= form.number_field :b, :value => @parameter.to, hidden: true %>
+    <%= form.number_field :m, :value => @parameter.m, hidden: true %>
+    <%= form.number_field :k, :value => @parameter.k, hidden: true %>
+    <%= form.number_field :n_s, :value => @parameter.n_s, hidden: true %>
+    <%= form.number_field :n_g, :value => @parameter.n_g, hidden: true %>
+    <%= form.number_field :dispersion, :value => @dispersion.round(3), hidden: true %>
+    <%= form.number_field :mean_neumann, :value => @mean_one_neumann.round(3), hidden: true %>
+    <%= form.number_field :dispersion_neumann, :value => @dispersion_one_neumann.round(3), hidden: true %>
+    <%= form.number_field :mode_neumann, :value => @mode_one_neumann.round(3), hidden: true %>
+    <%= form.number_field :mean_metropolis, :value => @mean_one_metropolis.round(3), hidden: true %>
+    <%= form.number_field :dispersion_metropolis, :value => @dispersion_one_metropolis.round(3), hidden: true %>
+    <%= form.number_field :mode_metropolis, :value => @mode_one_metropolis.round(3), hidden: true %>
+
+    <%= form.submit "Зберегти результати моделювання у файл", :class => "btn btn-outline-primary", :id => "save_to_file_btn", :style => "margin-left: 25px" %>
+  <% end %>
+</p>
+
+<h1 style="padding: 0 25px 10px">Результати моделювання # <%= @parameter.id %> </h1>
+<div style="font-family: 'Times New Roman',serif; font-size: 20px">
+  <h2 class="alert alert-primary" style="padding: 0 25px">Вхідні дані</h2>
+  <ul class="hr" style="font-size: 21px">
+    <li>a: <%= @parameter.from %></li>
+    <li>b: <%= @parameter.to %></li>
+    <li>μ: <%= @parameter.m %></li>
+    <li>k: <%= @parameter.k %></li>
+    <li>N_s: <%= @parameter.n_s %></li>
+    <li>N_g: <%= @parameter.n_g %></li>
+  </ul>
+  <hr>
+  <h2 class="alert alert-primary" style="padding: 0 25px">Функція щільності ймовірності</h2>
+  <div style="padding: 5px 25px">
+    <%= line_chart [
+                     {
+                       name: "PDF", type: 'line', data: @cdf
+                     },
+                   ],
+                   title: "Функція щільності ймовірності",
+                   colors: ['green'],
+                   xtitle: "x",
+                   ytitle: "P(x)",
+                   download: { background: "#ffffff" }
+    %>
+  </div>
+  <hr>
+  <h2 class="alert alert-primary" style="padding: 0 25px">Статистична перевірка випадкових величин</h2>
+  <h3 style="padding: 0 10px">● Метод Неймана</h3>
+  <div style="padding: 5px 25px">
+    <%= column_chart [
+                       {
+                         name: "Апроксимація розподілу фон Мізеса", type: 'column', data: @p_k
+                       },
+                       {
+                         name: "Перша серія моделювання", type: 'column', data: @series_one_neumann
+                       },
+                       {
+                         name: "Друга серія моделювання", type: 'column', data: @series_two_neumann
+                       }
+                     ],
+                     title: "Статистична перевірка випадкових величин методу Неймана",
+                     colors: ["green", "blue", "purple"],
+                     xtitle: "x",
+                     ytitle: "p(x)",
+                     download: { background: "#ffffff" }
+    %>
+  </div>
+  <hr>
+  <h3 style="padding: 0 10px">● Метод Метрополіса</h3>
+  <div style="padding: 5px 25px">
+    <%= column_chart [
+                       {
+                         name: "Апроксимація розподілу фон Мізеса", type: 'column', data: @p_k
+                       },
+                       {
+                         name: "Перша серія моделювання", type: 'column', data: @series_one_metropolis
+                       },
+                       {
+                         name: "Друга серія моделювання", type: 'column', data: @series_two_metropolis
+                       }
+                     ],
+                     title: "Статистична перевірка випадкових величин методу Метрополіса",
+                     colors: ["green", "blue", "purple"],
+                     xtitle: "x",
+                     ytitle: "p(x)",
+                     download: { background: "#ffffff" }
+    %>
+  </div>
+  <hr>
+  <h3 style="padding: 0 10px">● Інтегральні характеристики</h3>
+  <div style="padding: 5px 25px">
+    <div style="text-align: center;">
+      <table>
+        <tr>
+          <td>&nbsp;</td>
+          <td><b>Теоретичні значення</b></td>
+          <td colspan="2"><b>Метод Неймана</b></td>
+          <td colspan="2"><b>Метод Метрополісу</b></td>
+        </tr>
+        <tr>
+          <td><b>Інтегральні характеристики</b></td>
+          <td style="background: #008000"></td>
+          <td style="background: #0000FF"></td>
+          <td style="background: #800080"></td>
+          <td style="background: #0000FF"></td>
+          <td style="background: #800080"></td>
+        </tr>
+        <tr>
+          <td><b>Математичне очікування</b></td>
+          <td><%= @mean.round(3) %></td>
+          <td><%= @mean_one_neumann.round(3) %></td>
+          <td><%= @mean_two_neumann.round(3) %></td>
+          <td><%= @mean_one_metropolis.round(3) %></td>
+          <td><%= @mean_two_metropolis.round(3) %></td>
+        </tr>
+        <tr>
+          <td><b>Дисперсія</b></td>
+          <td><%= @dispersion.round(3) %></td>
+          <td><%= @dispersion_one_neumann.round(3) %></td>
+          <td><%= @dispersion_two_neumann.round(3) %></td>
+          <td><%= @dispersion_one_metropolis.round(3) %></td>
+          <td><%= @dispersion_two_metropolis.round(3) %></td>
+        </tr>
+        <tr>
+          <td><b>Мода</b></td>
+          <td><%= @mode.round(3) %></td>
+          <td><%= @mode_one_neumann.round(3) %></td>
+          <td><%= @mode_two_neumann.round(3) %></td>
+          <td><%= @mode_one_metropolis.round(3) %></td>
+          <td><%= @mode_two_metropolis.round(3) %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <hr>
+</div>
+
+<script>
+    document.getElementById("save_to_file_btn").addEventListener('click', function () {
+        alert("Результати моделювання збережено.\n" +
+            "Шлях до файлу app/modeling_results_xlsx/\n" +
+            "Ім'я файлу \"Results_of_modeling_#<\modeling_number>\".")
+    });
+</script>
